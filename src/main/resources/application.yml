@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: kmanager
+  mvc:
+    problemdetails:
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://172.17.0.4:5432/kmanager
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      idle-timeout: '1200000'
+      maximum-pool-size: '100'
+      max-lifetime: '3600000'
+      connection-timeout: '3000'
+      minimum-idle: '10'
+      auto-commit: true
+      pool-name: HikariPool-PostgreSQL
+      connection-test-query: select * from information_schema.tables limit 1
+      leak-detection-threshold: 20000
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+  threads:
+    virtual:
+      enabled: false
+server:
+  tomcat:
+    threads:
+      max: '1000'
+      min-spare: '1000'
+    max-connections: '10000'
+    accept-count: '1000'
+#jwt:
+#  public:
+#    key: classpath:investmentapp.pub
+#  private:
+#    key: classpath:investmentapp
+#  token:
+#    expiry: 3600
+
+app:
+  dir:
+    import: ./import
+
+logging:
+  level:
+    org:
+      springframework:
+        jdbc:
+          core:
+            JdbcTemplate: DEBUG
+        security: TRACE
+    com:
+      zaxxer:
+        hikari:
+          HikariConfig: INFO
+          nodeValue: INFO
