@@ -43,9 +43,9 @@ class PortfolioController(val portfolioService: PortfolioService) {
         logger.info("Received file: Name={}, Type={}, Size={}", fileName, fileType, fileSize);
 
         // Validate file type by extension
-        checkNotNull(fileName)
+//        checkNotNull(fileName)
 
-        fileName.let {
+        fileName?.let {
             if (it.lastIndexOf(".") != -1 && it.lastIndexOf(".") != 0) {
                 val ext = it.substring(it.lastIndexOf(".") + 1)
                 if (ext != "xlsx" && ext != "xls") {

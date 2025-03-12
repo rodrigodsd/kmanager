@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS portfolio (
     investor_id INTEGER NOT NULL,
     name VARCHAR(40) NOT NULL,
     description VARCHAR(120),
+    active BOOLEAN,
     constraint fk_portfolio_investor foreign key (investor_id) references investor(id)
 );
 

@@ -2,7 +2,6 @@ package com.finance.kmanager.portfolio
 
 import com.finance.kmanager.portfolio.domain.Portfolio
 import com.finance.kmanager.portfolio.domain.Position
-import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import java.math.BigDecimal
 import java.util.*
@@ -10,36 +9,6 @@ import java.util.*
 // Abstract the parsing behavior into a generic interface
 interface PositionParser {
     fun parse(row: Row, portfolio: Portfolio): Position
-}
-
-// Core utility functions for parsing data from Excel cells
-object CellValueParser {
-
-    fun getCellValueAsString(cell: Cell?): String {
-        if (cell == null) return ""
-        return when (cell.cellType) {
-            org.apache.poi.ss.usermodel.CellType.STRING -> cell.richStringCellValue.string.trim()
-            org.apache.poi.ss.usermodel.CellType.NUMERIC -> if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
-                cell.dateCellValue.toString() // Adjust date format if required
-            } else {
-                cell.numericCellValue.toString()
-            }
-
-            else -> ""
-        }
-    }
-
-    fun getCellValueAsBigDecimal(cell: Cell?): BigDecimal {
-        if (cell == null) return BigDecimal.ZERO
-        return when (cell.cellType) {
-            org.apache.poi.ss.usermodel.CellType.NUMERIC -> BigDecimal.valueOf(cell.numericCellValue)
-            org.apache.poi.ss.usermodel.CellType.STRING -> {
-                cell.richStringCellValue.string.trim().toBigDecimalOrNull() ?: BigDecimal.ZERO
-            }
-
-            else -> BigDecimal.ZERO
-        }
-    }
 }
 
 // Enum representing position mappers for different asset types
@@ -74,10 +43,10 @@ class VariableIncomeParser : PositionParser {
         return Position(
             id = null,
             portfolioId = portfolio.id!!,
-            assetName = CellValueParser.getCellValueAsString(row.getCell(3)),
-            isin = if (isin.isNotEmpty()) isin.take(12) else "",
+            code = CellValueParser.getCellValueAsString(row.getCell(3)),
+            codeIsin = if (isin.isNotEmpty()) isin.take(12) else "",
             quantity = CellValueParser.getCellValueAsBigDecimal(row.getCell(8)),
-            price = BigDecimal.ZERO
+            priceAvarage = BigDecimal.ZERO
         )
     }
 }
@@ -89,10 +58,10 @@ class BDRParser : PositionParser {
         return Position(
             id = null,
             portfolioId = portfolio.id!!,
-            assetName = CellValueParser.getCellValueAsString(row.getCell(3)),
-            isin = if (isin.isNotEmpty()) isin.take(12) else "",
+            code = CellValueParser.getCellValueAsString(row.getCell(3)),
+            codeIsin = if (isin.isNotEmpty()) isin.take(12) else "",
             quantity = CellValueParser.getCellValueAsBigDecimal(row.getCell(8)),
-            price = BigDecimal.ZERO
+            priceAvarage = BigDecimal.ZERO
         )
     }
 }
@@ -103,10 +72,10 @@ class FixedIncomeParser : PositionParser {
         return Position(
             id = null,
             portfolioId = portfolio.id!!,
-            assetName = CellValueParser.getCellValueAsString(row.getCell(3)),
-            isin = "",
+            code = CellValueParser.getCellValueAsString(row.getCell(3)),
+            codeIsin = "",
             quantity = CellValueParser.getCellValueAsBigDecimal(row.getCell(8)),
-            price = BigDecimal.ZERO
+            priceAvarage = BigDecimal.ZERO
         )
     }
 }
@@ -117,10 +86,10 @@ class TreasuriesParser : PositionParser {
         return Position(
             id = null,
             portfolioId = portfolio.id!!,
-            assetName = CellValueParser.getCellValueAsString(row.getCell(2)),
-            isin = "",
+            code = CellValueParser.getCellValueAsString(row.getCell(2)),
+            codeIsin = "",
             quantity = CellValueParser.getCellValueAsBigDecimal(row.getCell(5)),
-            price = BigDecimal.ZERO
+            priceAvarage = BigDecimal.ZERO
         )
     }
 }

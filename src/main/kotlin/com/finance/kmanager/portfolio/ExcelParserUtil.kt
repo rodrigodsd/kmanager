@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils
 import org.apache.poi.ss.usermodel.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.yaml.snakeyaml.util.Tuple
 import java.io.InputStream
 
 object ExcelParserUtil {
@@ -17,7 +16,7 @@ object ExcelParserUtil {
      * Main method for parsing an Excel file and extracting positions per sheet.
      */
     @Throws(PositionParsingException::class)
-    fun parseExcelFile(inputStream: InputStream, portfolio: Portfolio): Tuple<List<Position>, Map<String, Int>> {
+    fun parseExcelFile(inputStream: InputStream, portfolio: Portfolio): Pair<List<Position>, Map<String, Int>> {
         val startTime = System.currentTimeMillis()
         val positions = mutableListOf<Position>()
         val counter = mutableMapOf<String, Int>()
@@ -43,7 +42,7 @@ object ExcelParserUtil {
             System.currentTimeMillis() - startTime
         )
 
-        return Tuple(positions, counter)
+        return Pair(positions, counter)
     }
 
     /**

@@ -4,5 +4,5 @@ import org.springframework.web.multipart.MultipartFile
 
 interface PortfolioService {
 
-    fun importPortfolio(file: MultipartFile, portfolioName: String, investorId: Int): HashMap<String, Int>
+    fun importPortfolio(file: MultipartFile, portfolioName: String, investorId: Int): Map<String, Int>
 }
