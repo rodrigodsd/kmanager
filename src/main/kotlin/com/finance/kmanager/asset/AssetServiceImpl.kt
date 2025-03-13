@@ -13,6 +13,7 @@ class AssetServiceImpl {
 
     private val logger: Logger = LoggerFactory.getLogger(AssetServiceImpl::class.java)
 
+    // TODO Use @org.springframework.modulith.events.ApplicationModuleListener
     @EventListener(classes = [PositionEventDto::class])
     fun on(event: PositionEventDto) {
         logger.info("Starting creating Asset register for asset")
