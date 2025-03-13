@@ -3,8 +3,11 @@ package com.finance.kmanager
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.modulith.Modulith
+import org.springframework.scheduling.annotation.EnableAsync
+import org.springframework.transaction.annotation.EnableTransactionManagement
 
-@Modulith
+@EnableAsync
+@EnableTransactionManagement
 @SpringBootApplication
 class KmanagerApplication
 

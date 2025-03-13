@@ -51,10 +51,10 @@ logging:
   level:
     org:
       springframework:
+        modulith: DEBUG
         web: DEBUG
-        jdbc:
-          core:
-            JdbcTemplate: DEBUG
+        jdbc: DEBUG
+        transaction: DEBUG
         security: TRACE
     com:
       zaxxer:

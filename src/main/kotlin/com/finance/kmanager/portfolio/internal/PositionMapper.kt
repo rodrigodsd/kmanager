@@ -7,6 +7,6 @@ import org.mapstruct.MappingConstants
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 interface PositionMapper {
-    fun positionToPositionDto(position: Position?): PositionDto?
-    fun positionDtoToPosition(positionDto: PositionDto?): Position?
+    fun positionToPositionDto(position: Position): PositionDto
+    fun positionDtoToPosition(positionDto: PositionDto): Position
 }
