@@ -1,4 +1,4 @@
-package com.finance.kmanager.portfolio;
+package com.finance.kmanager.portfolio.internal;
 
 import com.finance.kmanager.portfolio.domain.Portfolio
 import org.springframework.data.repository.ListCrudRepository

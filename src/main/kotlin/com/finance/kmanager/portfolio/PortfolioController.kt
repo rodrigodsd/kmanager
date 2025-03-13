@@ -1,6 +1,7 @@
 package com.finance.kmanager.portfolio
 
-import com.finance.kmanager.portfolio.domain.Portfolio
+import com.finance.kmanager.portfolio.domain.Position
+import com.finance.kmanager.portfolio.internal.PortfolioService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -16,8 +17,13 @@ class PortfolioController(val portfolioService: PortfolioService) {
     val logger: Logger = LoggerFactory.getLogger(PortfolioController::class.java)
 
     @GetMapping("{id}")
-    fun getPortfolio(@PathVariable("id") id: Int) :Portfolio {
-        return Portfolio(0,0,"","")
+    fun getPortfolio(@PathVariable("id") id: Int) :List<Position> {
+        return portfolioService.getPositions(id)
+    }
+
+    @PutMapping("{id}")
+    fun getPortfolio(@PathVariable("id") id: Int, @RequestBody position: Position) :List<Position> {
+        return portfolioService.updatePositions(listOf(position))
     }
 
     @PostMapping("/upload")
@@ -41,9 +47,6 @@ class PortfolioController(val portfolioService: PortfolioService) {
         val fileSize = file.size
 
         logger.info("Received file: Name={}, Type={}, Size={}", fileName, fileType, fileSize);
-
-        // Validate file type by extension
-//        checkNotNull(fileName)
 
         fileName?.let {
             if (it.lastIndexOf(".") != -1 && it.lastIndexOf(".") != 0) {

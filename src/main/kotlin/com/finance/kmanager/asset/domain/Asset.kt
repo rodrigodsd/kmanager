@@ -1,6 +1,5 @@
-package com.finance.kmanager.portfolio.domain
+package com.finance.kmanager.asset.domain
 
-import com.finance.kmanager.portfolio.AssetType
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 import java.math.BigDecimal

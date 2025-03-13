@@ -1,4 +1,4 @@
-package com.finance.kmanager.portfolio
+package com.finance.kmanager.portfolio.internal
 
 import com.finance.kmanager.portfolio.domain.Position
 import org.springframework.stereotype.Service
@@ -17,4 +17,9 @@ class PositionServiceImpl(val positionRepository: PositionRepository) : Position
     override fun saveAll(positions: List<Position>): List<Position> {
         return positionRepository.saveAll(positions)
     }
+
+    override fun getAllByPortfolioId(id: Int): List<Position> {
+        return positionRepository.getAllByPortfolioId(id)
+    }
+
 }

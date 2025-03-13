@@ -1,4 +1,4 @@
-package com.finance.kmanager.portfolio
+package com.finance.kmanager.asset.domain
 
 enum class AssetType {
     ACAO,

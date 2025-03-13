@@ -1,6 +1,5 @@
-package com.finance.kmanager.portfolio
+package com.finance.kmanager.portfolio.internal
 
-import com.finance.kmanager.exception.PositionParsingException
 import com.finance.kmanager.portfolio.domain.Portfolio
 import com.finance.kmanager.portfolio.domain.Position
 import org.apache.commons.lang3.StringUtils
@@ -8,6 +7,7 @@ import org.apache.poi.ss.usermodel.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.InputStream
+import java.math.BigDecimal
 
 object ExcelParserUtil {
     private val logger: Logger = LoggerFactory.getLogger(ExcelParserUtil::class.java)
@@ -56,7 +56,7 @@ object ExcelParserUtil {
     ) {
         val sheetName = sheet.sheetName
         try {
-            PositionMapper.findByName(sheetName).ifPresentOrElse({ mapper ->
+            AssetMapper.findByName(sheetName).ifPresentOrElse({ mapper ->
                 val rowCount = parseRows(sheet, mapper, portfolio, positions)
                 counter[sheetName] = rowCount
             }, {
@@ -72,7 +72,7 @@ object ExcelParserUtil {
      */
     private fun parseRows(
         sheet: Sheet,
-        mapper: PositionMapper,
+        mapper: AssetMapper,
         portfolio: Portfolio,
         positions: MutableList<Position>
     ): Int {
@@ -98,6 +98,40 @@ object ExcelParserUtil {
      */
     private fun isHeaderOrEmptyRow(row: Row): Boolean {
         return row.rowNum == 0 || row.getCell(0)?.stringCellValue?.let { StringUtils.isBlank(it) } == true
+    }
+
+
+}
+
+object CellValueParserUtil {
+
+    fun getCellValueAsString(cell: Cell?): String {
+        if (cell == null) return ""
+        return when (cell.cellType) {
+            org.apache.poi.ss.usermodel.CellType.STRING -> cell.richStringCellValue.string.trim()
+            org.apache.poi.ss.usermodel.CellType.NUMERIC -> if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(
+                    cell
+                )
+            ) {
+                cell.dateCellValue.toString() // Adjust date format if required
+            } else {
+                cell.numericCellValue.toString()
+            }
+
+            else -> ""
+        }
+    }
+
+    fun getCellValueAsBigDecimal(cell: Cell?): BigDecimal {
+        if (cell == null) return BigDecimal.ZERO
+        return when (cell.cellType) {
+            org.apache.poi.ss.usermodel.CellType.NUMERIC -> BigDecimal.valueOf(cell.numericCellValue)
+            org.apache.poi.ss.usermodel.CellType.STRING -> {
+                cell.richStringCellValue.string.trim().toBigDecimalOrNull() ?: BigDecimal.ZERO
+            }
+
+            else -> BigDecimal.ZERO
+        }
     }
 }
 

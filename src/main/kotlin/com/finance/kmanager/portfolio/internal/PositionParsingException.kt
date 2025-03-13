@@ -1,4 +1,4 @@
-package com.finance.kmanager.exception
+package com.finance.kmanager.portfolio.internal
 
 /**
  * Custom exception for handling Excel parsing errors.

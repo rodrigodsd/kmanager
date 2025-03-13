@@ -1,4 +1,4 @@
-package com.finance.kmanager.portfolio
+package com.finance.kmanager.portfolio.internal
 
 import com.finance.kmanager.portfolio.domain.Portfolio
 import com.finance.kmanager.portfolio.domain.Position
@@ -12,12 +12,12 @@ interface PositionParser {
 }
 
 // Enum representing position mappers for different asset types
-enum class PositionMapper(
+enum class AssetMapper(
     private val assetName: String,
     private val parser: PositionParser
 ) : PositionParser {
 
-    ASSET("Acoes", VariableIncomeParser()),
+    STOCK("Acoes", VariableIncomeParser()),
     BDR("BDR", BDRParser()),
     ETF("ETF", VariableIncomeParser()),
     FII("Fundo de Investimento", VariableIncomeParser()),
@@ -30,8 +30,8 @@ enum class PositionMapper(
     }
 
     companion object {
-        fun findByName(name: String?): Optional<PositionMapper> {
-            return values().find { it.assetName.equals(name, ignoreCase = true) }.let { Optional.ofNullable(it) }
+        fun findByName(name: String?): Optional<AssetMapper> {
+            return entries.find { it.assetName.equals(name, ignoreCase = true) }.let { Optional.ofNullable(it) }
         }
     }
 }
@@ -39,13 +39,13 @@ enum class PositionMapper(
 // Parse logic for variable income (common for ASSET, ETF, FII)
 class VariableIncomeParser : PositionParser {
     override fun parse(row: Row, portfolio: Portfolio): Position {
-        val isin = CellValueParser.getCellValueAsString(row.getCell(5))
+        val isin = CellValueParserUtil.getCellValueAsString(row.getCell(5))
         return Position(
             id = null,
             portfolioId = portfolio.id!!,
-            code = CellValueParser.getCellValueAsString(row.getCell(3)),
+            code = CellValueParserUtil.getCellValueAsString(row.getCell(3)),
             codeIsin = if (isin.isNotEmpty()) isin.take(12) else "",
-            quantity = CellValueParser.getCellValueAsBigDecimal(row.getCell(8)),
+            quantity = CellValueParserUtil.getCellValueAsBigDecimal(row.getCell(8)),
             priceAvarage = BigDecimal.ZERO
         )
     }
@@ -54,13 +54,13 @@ class VariableIncomeParser : PositionParser {
 // Parse logic for BDR
 class BDRParser : PositionParser {
     override fun parse(row: Row, portfolio: Portfolio): Position {
-        val isin = CellValueParser.getCellValueAsString(row.getCell(4))
+        val isin = CellValueParserUtil.getCellValueAsString(row.getCell(4))
         return Position(
             id = null,
             portfolioId = portfolio.id!!,
-            code = CellValueParser.getCellValueAsString(row.getCell(3)),
+            code = CellValueParserUtil.getCellValueAsString(row.getCell(3)),
             codeIsin = if (isin.isNotEmpty()) isin.take(12) else "",
-            quantity = CellValueParser.getCellValueAsBigDecimal(row.getCell(8)),
+            quantity = CellValueParserUtil.getCellValueAsBigDecimal(row.getCell(8)),
             priceAvarage = BigDecimal.ZERO
         )
     }
@@ -72,9 +72,9 @@ class FixedIncomeParser : PositionParser {
         return Position(
             id = null,
             portfolioId = portfolio.id!!,
-            code = CellValueParser.getCellValueAsString(row.getCell(3)),
+            code = CellValueParserUtil.getCellValueAsString(row.getCell(3)),
             codeIsin = "",
-            quantity = CellValueParser.getCellValueAsBigDecimal(row.getCell(8)),
+            quantity = CellValueParserUtil.getCellValueAsBigDecimal(row.getCell(8)),
             priceAvarage = BigDecimal.ZERO
         )
     }
@@ -86,9 +86,9 @@ class TreasuriesParser : PositionParser {
         return Position(
             id = null,
             portfolioId = portfolio.id!!,
-            code = CellValueParser.getCellValueAsString(row.getCell(2)),
+            code = CellValueParserUtil.getCellValueAsString(row.getCell(2)),
             codeIsin = "",
-            quantity = CellValueParser.getCellValueAsBigDecimal(row.getCell(5)),
+            quantity = CellValueParserUtil.getCellValueAsBigDecimal(row.getCell(5)),
             priceAvarage = BigDecimal.ZERO
         )
     }

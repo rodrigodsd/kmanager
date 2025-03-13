@@ -5,7 +5,7 @@ spring:
     problemdetails:
       enabled: true
   datasource:
-    url: jdbc:postgresql://172.17.0.4:5432/kmanager
+    url: jdbc:postgresql://172.17.0.3:5432/kmanager
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -44,11 +44,14 @@ server:
 app:
   dir:
     import: ./import
+  cors:
+    originPatterns: ${CORS_ORIGINS}
 
 logging:
   level:
     org:
       springframework:
+        web: DEBUG
         jdbc:
           core:
             JdbcTemplate: DEBUG
